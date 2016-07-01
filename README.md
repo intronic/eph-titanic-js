@@ -12,7 +12,7 @@ For development usage, an http server is required, such as [Python SimpleHTTPSer
 and Bolt must be installed.
 
 <pre>
-git clone https://github.com/intronic/ehp-titanic-js.git
+git clone https://github.com/intronic/eph-titanic-js.git
 cd eph-titanic-js
 python -m SimpleHTTPServer 8000
 </pre>
