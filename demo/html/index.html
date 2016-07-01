@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+          <title>Programming exercise MJP</title>
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          <script type="text/javascript" src="../../config/bolt/bootstrap-demo.js"></script>
+    </head>
+    <body>
+        <!-- TABLE DIMENSIONS UI -->
+        <div id="controls"">
+            <span>Rows: <input id="rows" type="text" size="5"></input></span>
+            <span>Columns: <input id="cols" type="text" size="5"></input></span>
+            <span><button id="table-spec">Draw Table</button></span>
+        </div>
+
+        <!-- This div will need to appear when the user has accepted the dimensions of the table -->
+        <div id="main" style="display: block; visibility: hidden; ">
+            <!-- Use this iframe to write into dynamically -->
+            <iframe style="margin: 100px;"></iframe>
+
+            <!-- This marker is used to display the current coordinates of the mouse within the iframe -->
+            <span id="coords" style="display: none;"></span>
+
+            <p>Log</p>
+            <div id="log" style="width: 500px; height: 300px; border: 1px solid blue; overflow: scroll;"></div>
+        </div>
+        <script type="text/javascript">
+            ephox.bolt.module.api.require(['titanic.api.Setup'], function (Setup) {
+            Setup();
+      });
+    </script>
+    </body>
+</html>
