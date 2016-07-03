@@ -1,0 +1,28 @@
+{
+  "name": "eph-titanic-js",
+  "version": "1.0.0",
+  "description": "Titanic Exercise",
+  "main": "titanic.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/**/*.js"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
+    "node-requirejs": "^0.1.1",
+    "test": ">=0.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intronic/eph-titanic-js.git"
+  },
+  "author": "Michael Pheasant",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/intronic/eph-titanic-js/issues"
+  },
+  "homepage": "https://github.com/intronic/eph-titanic-js#readme"
+}
