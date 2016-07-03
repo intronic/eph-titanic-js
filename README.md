@@ -1,18 +1,18 @@
-# Titanic Exercise in JS 
+# Titanic Exercise in JS
 
 This is the Titanic exercise in JS.
 
 ## Usage: Development
 
-For development usage, an http server is required, such as [Python SimpleHTTPServer](https://docs.python.org/2/library/simplehttpserver.html)
+For development usage, a node http server can be run as follows:
 
 <pre>
 git clone https://github.com/intronic/eph-titanic-js.git
 cd eph-titanic-js
-python -m SimpleHTTPServer 8000
+npm run http
 </pre>
 
-Then open the html page in a browser: ```http://localhost:8000/```
+Then open the html page in a browser: ```http://localhost:8080/```
 
 ## Testing
 
