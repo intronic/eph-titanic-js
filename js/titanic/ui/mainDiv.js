@@ -1,13 +1,15 @@
 define(
   [
     "jquery",
+    "immutable",
+    "titanic/app/state",
     "titanic/html/table",
     "titanic/ui/tableSpec",
     "titanic/ui/coords",
     "titanic/util/xy"
   ],
 
-  function ($,table,tableSpec,coords,xy) {
+  function ($,immutable,state,table,tableSpec,coords,xy) {
     var deltaXY = {left: 10, top: 10};
     var main = $("#main") // main element
     var iframe = main.find("iframe")[0]; // iframe under 'main'
@@ -76,11 +78,58 @@ define(
       var ifrPos = xy.add(xyS, lastMousePos)
       coords.show(xy.str(ifrPos))
     }
-    // attach mouse and scroll events
+
+    // A single left­click cancels the selection of any other
+    // cells, and toggles the selection of the cell at the
+    // mouse pointer.
+    function click (e) {
+      if (e.target.tagName == "TD") {
+        state.toggleId(e.target.id, toggleSelected)
+      }
+    }
+    // A single right­click toggles the selection of the cell
+    // at the mouse pointer, and preserves selection of any
+    // other cells. Essentially, you are adding to the selection.
+    function contextmenu (e) {
+      e.preventDefault()
+      if (e.target.tagName == "TD") {
+        state.toggleAddId(e.target.id, toggleSelected)
+      }
+    }
+    // A double left­click cancels the selection of any other
+    // cells, and selects the entire row at the mouse pointer.
+    function dblclick (e) {
+      if (e.target.tagName == "TD") {
+        var r = $(e.target).parent()[0]
+        state.toggleId(r.id, toggleSelected)
+      }
+    }
+
+    // Change the UI selection state to visually indicate
+    // the cell or row selection status.
+    // oldSet and newSet are sets of cell or row IDs that were
+    // and are now selected, respectively.
+    // old (but not new) items should be unselected.
+    // new (but not old) items should be selected.
+    // any other items have not changed state.
+    function toggleSelected(oldSet, newSet) {
+      var unSel = oldSet.subtract(newSet)
+      var toSel = newSet.subtract(oldSet)
+      var off = unSel.forEach(function(id) {
+        $(idoc).find("#"+id).removeClass("sel");
+      })
+      var on  = toSel.forEach(function(id) {
+        $(idoc).find("#"+id).addClass("sel");
+      })
+    }
+
+    // attach events
     $(iframe).hover(mouseenter, mouseleave)
     $(idoc).mousemove(mousemove)
     $(idoc).scroll(scroll)
-
+    $(idoc).click(click)
+    $(idoc).dblclick(dblclick)
+    $(idoc).contextmenu(contextmenu)
 
     // add table to body of iframe
     var addTable = function(r,c) {
