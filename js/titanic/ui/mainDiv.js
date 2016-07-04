@@ -104,6 +104,14 @@ define(
         state.toggleId(r.id, toggleSelected)
       }
     }
+    // Pressing the delete (or backspace) key should delete
+    // all cells that are considered 'selected'.
+    // This will create an uneven table, which is fine.
+    function keyup (e) {
+        if(e.keyCode == 46 || e.keyCode == 8) {
+          state.init(deleteSelected)
+        }
+    }
 
     // Change the UI selection state to visually indicate
     // the cell or row selection status.
@@ -115,11 +123,17 @@ define(
     function toggleSelected(oldSet, newSet) {
       var unSel = oldSet.subtract(newSet)
       var toSel = newSet.subtract(oldSet)
-      var off = unSel.forEach(function(id) {
+      unSel.forEach(function(id) {
         $(idoc).find("#"+id).removeClass("sel");
       })
-      var on  = toSel.forEach(function(id) {
+      toSel.forEach(function(id) {
         $(idoc).find("#"+id).addClass("sel");
+      })
+    }
+    // delete selected cell / row IDs from table
+    function deleteSelected(selSet) {
+      selSet.forEach(function(id) {
+        $(idoc).find("#"+id).remove();
       })
     }
 
@@ -130,6 +144,15 @@ define(
     $(idoc).click(click)
     $(idoc).dblclick(dblclick)
     $(idoc).contextmenu(contextmenu)
+    $(idoc).keyup(keyup)
+    // Chrome is annoying with Backspace on OSX - Stop 'back' navigation on 
+    // Backspace key press in top-level document elements thar are not editable
+    $(document).keyup(function (e) {
+      if(e.keyCode == 8 && $(e.target).is("HTML, BODY, TABLE, TBODY, TR, TD, DIV")) {
+        e.preventDefault()
+      }
+    })
+
 
     // add table to body of iframe
     var addTable = function(r,c) {

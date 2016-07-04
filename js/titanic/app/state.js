@@ -13,7 +13,12 @@ define(
       return _selectionSet
     }
 
-    function init () {
+    // init: Reset selection to empty set.
+    // Call the selectionChange (if supplied) with the old selectionSet.
+    function init (selectionChange) {
+      if (selectionChange != null) {
+        selectionChange(selectionSet())
+      }
       return _selectionSet = immutable.Set();
     }
     // toggleId: cancel the selection of any other cells,
