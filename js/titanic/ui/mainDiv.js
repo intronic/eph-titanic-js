@@ -109,8 +109,10 @@ define(
     // Pressing the delete (or backspace) key should delete
     // all cells that are considered 'selected'.
     // This will create an uneven table, which is fine.
+    // Stop the Backspace navigation in the iframe.
     function keyup (e) {
         if(e.keyCode == 46 || e.keyCode == 8) {
+          cancelDelete(e)
           state.init(deleteSelected)
         }
     }
@@ -151,6 +153,12 @@ define(
       }
     }
 
+    function cancelDelete(e) {
+      if(e.keyCode == 8 && $(e.target).is("HTML, BODY, TABLE, TBODY, TR, TD, DIV, IFRAME")) {
+        e.preventDefault()
+      }
+    }
+
     // attach events
     $(iframe).hover(mouseenter, mouseleave)
     $(idoc).mousemove(mousemove)
@@ -159,13 +167,16 @@ define(
     $(idoc).dblclick(dblclick)
     $(idoc).contextmenu(contextmenu)
     $(idoc).keyup(keyup)
-    // Chrome is annoying with Backspace on OSX - Stop 'back' navigation on
-    // Backspace key press in top-level document elements thar are not editable
-    $(document).keyup(function (e) {
-      if(e.keyCode == 8 && $(e.target).is("HTML, BODY, TABLE, TBODY, TR, TD, DIV")) {
-        e.preventDefault()
-      }
-    })
+    $(idoc).keydown(keyup) // IE triggers keydown also
+    $(idoc).keypress(keyup) // FF triggers keypress also
+
+    // Chrome triggers document and iframe-document keyup event with Backspace.
+    // FF triggers keypress event also.
+    // IE triggers keydown event also
+    // prevent default 'back' navigation on document elements that are not editable.
+    $(document).keyup(cancelDelete)
+    $(document).keydown(cancelDelete)
+    $(document).keypress(cancelDelete)
 
     // validate table rows and columns
     function validTableSpec(r, c) {
