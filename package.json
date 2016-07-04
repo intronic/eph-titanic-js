@@ -8,11 +8,13 @@
   },
   "scripts": {
     "test": "mocha test/**/*.js",
-    "http": "node node_modules/.bin/http-server"
+    "http": "node node_modules/.bin/http-server  -c-1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "http-server": "^0.9.0",
+    "immutable": "^3.8.1",
+    "jquery": "^3.0.0",
     "mocha": "^2.5.3",
     "node-requirejs": "^0.1.1",
     "test": ">=0.0.5"
