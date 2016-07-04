@@ -6,10 +6,11 @@ define(
     "titanic/html/table",
     "titanic/ui/tableSpec",
     "titanic/ui/coords",
+    "titanic/ui/log",
     "titanic/util/xy"
   ],
 
-  function ($,immutable,state,table,tableSpec,coords,xy) {
+  function ($,immutable,state,table,tableSpec,coords,log,xy) {
     var deltaXY = {left: 10, top: 10};
     var main = $("#main") // main element
     var iframe = main.find("iframe")[0]; // iframe under 'main'
@@ -123,6 +124,8 @@ define(
     function toggleSelected(oldSet, newSet) {
       var unSel = oldSet.subtract(newSet)
       var toSel = newSet.subtract(oldSet)
+      logMsg("clear ", unSel)
+      logMsg("select ", toSel)
       unSel.forEach(function(id) {
         $(idoc).find("#"+id).removeClass("sel");
       })
@@ -132,11 +135,19 @@ define(
     }
     // delete selected cell / row IDs from table
     function deleteSelected(selSet) {
+      logMsg("delete ", selSet)
       selSet.forEach(function(id) {
         $(idoc).find("#"+id).remove();
       })
     }
 
+    function logMsg(prefix, idSet) {
+      if (! idSet.isEmpty()) {
+        log.show(prefix + idSet.map(function (id) {
+            return table.idToStr(tableSpec.rows(), id)
+          }).join(" "))
+      }
+    }
     // attach events
     $(iframe).hover(mouseenter, mouseleave)
     $(idoc).mousemove(mousemove)

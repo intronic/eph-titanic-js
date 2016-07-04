@@ -27,6 +27,17 @@ define(
       }
       return s + "</tr>";
     }
+    // Return string coordinate representation of cell or row id.
+    function idToStr(cols, id) {
+      var num = parseInt(id.substr(1))
+      if (id.substr(0,1) === "r") {
+        return "row " + num
+      } else {
+        var c = num % cols;
+        var r = Math.floor(num / cols);
+        return "(" + r + "," + c + ")"
+      }
+    }
     // HTML for a table with 'r' rows and 'c' columns
     function html (r, c) {
       var s = "<table><tbody>";
@@ -38,6 +49,7 @@ define(
 
     return {
       html: html,
+      idToStr: idToStr,
       _cellNum:  cellNum,
       _cellId:   cellId,
       _rowId:    rowId,

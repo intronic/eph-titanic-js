@@ -28,6 +28,13 @@ describe('Html Table', function() {
         assert.equal("r0",Table._rowId(0),'rowId(0)')
         assert.equal("r1",Table._rowId(1),'rowId(1)')
         assert.equal("r2",Table._rowId(2),'rowId(2)')
+        assert.equal("row 0", Table.idToStr(999,"r0"))
+        assert.equal("row 1", Table.idToStr(999,"r1"))
+        assert.equal("(0,0)", Table.idToStr(2,"c0"))
+        assert.equal("(0,1)", Table.idToStr(2,"c1"))
+        assert.equal("(1,0)", Table.idToStr(2,"c2"))
+        assert.equal("(1,1)", Table.idToStr(2,"c3"))
+        assert.equal("(2,0)", Table.idToStr(2,"c4"))
         assert.equal("<td id='c0'>\u00a0</td>",
           Table._cellHtml(2,0,0), 'not cellHtml(2,0,0)');
         assert.equal("<td id='c3'>\u00a0</td>",
