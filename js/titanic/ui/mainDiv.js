@@ -11,6 +11,7 @@ define(
   ],
 
   function ($,immutable,state,table,tableSpec,coords,log,xy) {
+    var maxCells = 100000;
     var deltaXY = {left: 10, top: 10};
     var main = $("#main") // main element
     var iframe = main.find("iframe")[0]; // iframe under 'main'
@@ -141,6 +142,7 @@ define(
       })
     }
 
+    // if idSet is not empty, append a log message with prefix.
     function logMsg(prefix, idSet) {
       if (! idSet.isEmpty()) {
         log.show(prefix + idSet.map(function (id) {
@@ -148,6 +150,7 @@ define(
           }).join(" "))
       }
     }
+
     // attach events
     $(iframe).hover(mouseenter, mouseleave)
     $(idoc).mousemove(mousemove)
@@ -156,7 +159,7 @@ define(
     $(idoc).dblclick(dblclick)
     $(idoc).contextmenu(contextmenu)
     $(idoc).keyup(keyup)
-    // Chrome is annoying with Backspace on OSX - Stop 'back' navigation on 
+    // Chrome is annoying with Backspace on OSX - Stop 'back' navigation on
     // Backspace key press in top-level document elements thar are not editable
     $(document).keyup(function (e) {
       if(e.keyCode == 8 && $(e.target).is("HTML, BODY, TABLE, TBODY, TR, TD, DIV")) {
@@ -164,14 +167,23 @@ define(
       }
     })
 
+    // validate table rows and columns
+    function validTableSpec(r, c) {
+      if ( r > 0 && c > 0 && ( r*c <= maxCells )) {
+        return true;
+      } else {
+        return alert("Please enter the number of rows and columns for the table (up to "
+          + Number(maxCells).toLocaleString() + " cells)." );
+      }
+    }
 
     // add table to body of iframe
-    var addTable = function(r,c) {
+    function addTable(r, c) {
       var b = idoc.body || idoc.find('body')[0];
       $(b).html(table.html(r,c))
     }
     // set iframe document style
-    var setDocStyle = function() {
+    function setDocStyle() {
       var h = $(idoc).head || $(idoc).find("head")[0];
       var s = $(h).find("style")
       if (s.length == 0) {
@@ -183,9 +195,11 @@ td.sel, tr.sel { background-color: #FF3300; }"
     }
     // Set a style for the table, create the table, show the main div
     var show = function () {
-      setDocStyle()
-      addTable(tableSpec.rows(),tableSpec.cols())
-      main.css({visibility: "visible"})
+      if (validTableSpec(tableSpec.rows(), tableSpec.cols())) {
+        setDocStyle()
+        addTable(tableSpec.rows(), tableSpec.cols())
+        main.css({visibility: "visible"})
+      }
     };
 
     return {
